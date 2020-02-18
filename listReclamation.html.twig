@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+    <div class="row">
+        <ol class="breadcrumb">
+            <li><a href="#">
+                    <svg class="glyph stroked home">
+                        <use xlink:href="#stroked-home"></use>
+                    </svg>
+                </a></li>
+            <li class="active">Icons</li>
+        </ol>
+    </div><!--/.row-->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Tables</h1>
+        </div>
+    </div><!--/.row-->
+
+    <h2> search</h2>
+    <div class="sidebar-search">
+        <div class="input-group custom-search-form">
+            <input type="text" id="search" class="form-control" placeholder="search in complaints">
+        </div>
+    </div>
+    <ul class="nav" id="side-menu">
+        <li><a href="#">SEARCH RESULTS<span class="fa arrow"></span></a></li>
+    </ul>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        var searchRequest = null ;
+        $("search").keyup(function () {
+            var minlength=1 ;
+            var that= this ;
+            var value = $(this).val();
+            var entitySelector= $("entitiesNav").html('');
+            if (value.length>=minlength) {
+                if (searchRequest != null) {
+                    searchRequest.abort() ;
+                    searchRequest=$.ajax({
+                        type: "GET" ,
+                        url: "{{ path('ajax_search') }}",
+                        data: {
+                            'q':value
+                        },
+                        dataType: "text" ,
+                        success: function (msg) {
+                            if (value===$(that).val() ) {
+                                var result=JSON.parse(msg) ;
+                                $.each(result, function (key,arr) {
+                                    $.each(arr, function(id, value){
+                                            if (key==='complaints') {
+                                                if (id!=='error') {
+                                                    console.log(value[1]) ;
+                                                    entitySelector.append('<li><b>'+value[1]+ '</b><a href="/'+id+'/ showReclamationback/{id}">'+'</a></li>' );
+                                                } else
+                                                {entitySelector.append('<li class"errorLi">'+value+'</li>') ;}
+                                            }
+                                        }
+
+                                    )
+
+                                })
+                            }
+
+                        }
+                    })
+
+                }
+            }
+        })
+
+    }) </script>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Advanced Table</div>
+                <div class="panel-body">
+                    <table data-toggle="table" data-url="tables/data1.json" data-show-refresh="true"
+                           data-show-toggle="true" data-show-columns="true" data-search="true"
+                           data-select-item-name="toolbar1" data-pagination="true" data-sort-name="name"
+                           data-sort-order="desc">
+                        <thead>
+                        <tr>
+                            <th data-checkbox="true">Item ID</th>
+                            <th data-sortable="true"> ID</th>
+                            <th data-sortable="true">Designation</th>
+                            <th data-sortable="true">Etat</th>
+                            <th data-sortable="true">Categorie</th>
+                            <th data-sortable="true">Action</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for r in rec %}
+                            <tr>
+                                <td></td>
+                                <td>{{ r.id }}</td>
+                                <td>{{ r.designation }}</td>
+                                <td>
+                                    {% if r.etat == true %}
+                                        traité
+                                    {% else %}
+                                        en crous<br>
+                                    {% endif %}</td>
+                                <td>{{ r.categorie.type }}</td>
+
+
+                                <td>
+                                    <a href="showReclamationback/{{ r.id }}" class="btn btn-dark">afficher</a>
+                                    <a href="editReclamation/{{ r.id }}" class="btn btn-info">Traiter</a>
+                                    <a href="deleteReclamation/{{ r.id }}" class="btn btn-danger">supprimer</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+{% endblock body %}
+
+
+
