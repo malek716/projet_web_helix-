@@ -1,0 +1,27 @@
+malek_homepage:
+    path:     /
+    defaults: { _controller: MalekBundle:Default:index }
+
+list_reclamation:
+    path:     /listReclamationback
+    defaults: { _controller: MalekBundle:Default:listReclamationback }
+
+listProduitFront:
+    path:     /listProduitFront
+    defaults: { _controller: MalekBundle:Default:listProduitFront }
+
+editReclamation:
+    path:     /editReclamation/{id}
+    defaults: { _controller: MalekBundle:Default:traiterReclamation }
+
+showReclamation:
+    path:     /showReclamationback/{id}
+    defaults: { _controller: MalekBundle:Default:showReclamationback}
+
+ajouterReclamation:
+    path:     /ajouterReclamation/{id}
+    defaults: { _controller: MalekBundle:Default:createReclamation }
+
+deleteReclamation:
+    path:     /deleteReclamation/{id}
+    defaults: { _controller:MalekBundle:Default:deleteReclamation }
